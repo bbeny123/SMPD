@@ -32,16 +32,16 @@ public class Database {
         }
     }
 
-    static Map<String, List<List<Double>>> getDatabase() {
-        return matrix;
-    }
-
     static List<List<Double>> getDatabase(String className) {
         return matrix.get(className);
     }
 
     static List<List<Double>> getByIndexes(String className, List<Integer> indexes) {
         return indexes.stream().map(i -> matrix.get(className).stream().map(a -> a.get(i)).collect(Collectors.toList())).collect(Collectors.toList());
+    }
+
+    static List<List<Double>> getByIndexes(List<List<Double>> samples, List<Integer> indexes) {
+        return indexes.stream().map(i -> samples.stream().map(a -> a.get(i)).collect(Collectors.toList())).collect(Collectors.toList());
     }
 
 }
