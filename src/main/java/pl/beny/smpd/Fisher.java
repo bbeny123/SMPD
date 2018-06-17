@@ -88,9 +88,7 @@ public class Fisher {
 
     public static PrimitiveMatrix getAverageMatrix(List<Double> avg, int size) {
         Double[][] arr = new Double[size][];
-        for (int i = 0; i < size; i++) {
-            arr[i] = avg.toArray(new Double[0]);
-        }
+        IntStream.range(0, size).forEach(i -> arr[i] = avg.toArray(new Double[0]));
         return PrimitiveMatrix.FACTORY.columns(arr);
     }
 
