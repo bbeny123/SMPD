@@ -32,6 +32,10 @@ public class Database {
         }
     }
 
+    static Map<String, List<List<Double>>> getDatabase() {
+        return matrix;
+    }
+
     static List<List<Double>> getDatabase(String className) {
         return matrix.get(className);
     }

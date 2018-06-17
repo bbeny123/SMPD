@@ -20,8 +20,12 @@ public class Main {
 //        System.out.println((System.nanoTime() - startTime) / 1000000);
 
         startTime = System.nanoTime();
-        Quality.checkCrossvalidation(6, 5);
+        Crossvalidation.checkCrossvalidation(6, 5);
         System.out.println((System.nanoTime() - startTime) / 1000000);
+
+//        startTime = System.nanoTime();
+//        Bootstrap.checkBootstrap(20, 50, 4);
+//        System.out.println((System.nanoTime() - startTime) / 1000000);
     }
 
 }

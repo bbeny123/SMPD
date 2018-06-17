@@ -1,18 +1,19 @@
 package pl.beny.smpd;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Quality {
+public class Crossvalidation {
 
     public static void checkCrossvalidation(int parts, int k) {
         List<List<List<Double>>> subsetsA = getSubsets(parts, Database.ACER);
         List<List<List<Double>>> subsetsB = getSubsets(parts, Database.QUERCUS);
         List<List<Boolean>> results = List.of(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-        IntStream.range(0, parts).forEach(i -> {
+        IntStream.range(0, parts).parallel().forEach(i -> {
             List<List<Double>> samplesA = getTraining(parts, i, subsetsA);
             List<List<Double>> samplesB = getTraining(parts, i, subsetsB);
             results.get(0).addAll(getResultsNN(subsetsA, samplesA, samplesB, i, Database.ACER));
@@ -32,15 +33,27 @@ public class Quality {
     }
 
     private static List<Boolean> getResultsNN(List<List<List<Double>>> subset, List<List<Double>> samplesA , List<List<Double>> samplesB, int part, String className) {
-        return subset.get(part).stream().map(sample -> Classificators.classifyNN(sample, samplesA, samplesB).equals(className)).collect(Collectors.toList());
+        List<String> correct = Arrays.asList(className, "AMBIGUOUS");
+        return subset.get(part)
+                .stream()
+                .map(sample -> correct.contains(Classificators.classifyNN(sample, samplesA, samplesB)))
+                .collect(Collectors.toList());
     }
 
     private static List<Boolean> getResultsNM(List<List<List<Double>>> subset, List<List<Double>> samplesA , List<List<Double>> samplesB, int part, String className) {
-        return subset.get(part).stream().map(sample -> Classificators.classifyNM(sample, samplesA, samplesB).equals(className)).collect(Collectors.toList());
+        List<String> correct = Arrays.asList(className, "AMBIGUOUS");
+        return subset.get(part)
+                .stream()
+                .map(sample -> correct.contains(Classificators.classifyNM(sample, samplesA, samplesB)))
+                .collect(Collectors.toList());
     }
 
     private static List<Boolean> getResultsKNN(List<List<List<Double>>> subset, List<List<Double>> samplesA , List<List<Double>> samplesB, int part, String className, int k) {
-        return subset.get(part).stream().map(sample -> Classificators.classifyKNN(sample, samplesA, samplesB, k).equals(className)).collect(Collectors.toList());
+        List<String> correct = Arrays.asList(className, "AMBIGUOUS");
+        return subset.get(part)
+                .stream()
+                .map(sample -> correct.contains(Classificators.classifyKNN(sample, samplesA, samplesB, k)))
+                .collect(Collectors.toList());
     }
 
     private static List<List<Double>> getTraining(int parts, int part, List<List<List<Double>>> subsets) {

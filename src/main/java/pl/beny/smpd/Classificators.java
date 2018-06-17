@@ -2,6 +2,7 @@ package pl.beny.smpd;
 
 import org.ojalgo.matrix.PrimitiveMatrix;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -30,6 +31,11 @@ public class Classificators {
 
     private static List<Double> classifyKNN(List<Double> sample, List<List<Double>> samples, int k) {
         List<Double> distance = samples.stream().mapToDouble(s -> (IntStream.range(0, 64).mapToDouble(i -> Math.pow(sample.get(i) - s.get(i), 2)).sum())).sorted().boxed().collect(Collectors.toList());
+
+        if (distance.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         Double max = distance.get(k >= distance.size() ? distance.size() - 1 : k - 1);
         return distance.stream().filter(d -> d <= max).collect(Collectors.toList());
     }
