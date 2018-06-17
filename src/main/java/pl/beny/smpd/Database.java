@@ -36,6 +36,10 @@ public class Database {
         return matrix;
     }
 
+    static List<List<Double>> getDatabase(String className) {
+        return matrix.get(className);
+    }
+
     static List<List<Double>> getByIndexes(String className, List<Integer> indexes) {
         return indexes.stream().map(i -> matrix.get(className).stream().map(a -> a.get(i)).collect(Collectors.toList())).collect(Collectors.toList());
     }

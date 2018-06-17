@@ -52,19 +52,15 @@ public class Fisher {
         return computeNominator(avgA, avgB) / computeDenominator(attrA, attrB, avgA, avgB);
     }
 
-    private static double computeNominator(List<Double> avgA, List<Double> avgB) {
-        double result = 0;
-        for (int i = 0; i < avgA.size(); i++) {
-            result += Math.pow(avgA.get(i) - avgB.get(i), 2);
-        }
-        return Math.sqrt(result);
+    public static double computeNominator(List<Double> avgA, List<Double> avgB) {
+        return Math.sqrt(IntStream.range(0, avgA.size()).mapToDouble(i -> Math.pow(avgA.get(i) - avgB.get(i), 2)).sum());
     }
 
     private static double computeDenominator(List<List<Double>> attrA, List<List<Double>> attrB, List<Double> avgA, List<Double> avgB) {
         return attrA.size() > 1 ? getCovarianceDeterminant(attrA, avgA) + getCovarianceDeterminant(attrB, avgB) : getStd(attrA.get(0), avgA.get(0)) + (getStd(attrB.get(0), avgB.get(0)));
     }
 
-    private static List<Double> getAverages(List<List<Double>> attr) {
+    public static List<Double> getAverages(List<List<Double>> attr) {
         return attr.stream().map(row -> row.stream().mapToDouble(i -> i).average().orElse(0)).collect(Collectors.toList());
     }
 
@@ -73,20 +69,24 @@ public class Fisher {
     }
 
     private static double getCovarianceDeterminant(List<List<Double>> attr, List<Double> avg) {
-        int size = attr.get(0).size();
-        return getCovarianceDeterminant(PrimitiveMatrix.FACTORY.rows(attr.stream().map(l -> l.toArray(new Double[0])).toArray(Double[][]::new)), getAverageMatrix(avg, size), size);
+        return getCovariance(attr, avg).getDeterminant().get();
     }
 
-    private static double getCovarianceDeterminant(PrimitiveMatrix values, PrimitiveMatrix avg, int size) {
+    public static PrimitiveMatrix getCovariance(List<List<Double>> attr, List<Double> avg) {
+        int size = attr.get(0).size();
+        return getCovariance(PrimitiveMatrix.FACTORY.rows(attr.stream().map(l -> l.toArray(new Double[0])).toArray(Double[][]::new)), getAverageMatrix(avg, size), size);
+    }
+
+    private static PrimitiveMatrix getCovariance(PrimitiveMatrix values, PrimitiveMatrix avg, int size) {
         PrimitiveMatrix differential = getDifferential(values, avg);
-        return differential.multiply(differential.transpose()).divide(size).getDeterminant().get();
+        return differential.multiply(differential.transpose()).divide(size);
     }
 
     private static PrimitiveMatrix getDifferential(PrimitiveMatrix values, PrimitiveMatrix avg) {
         return values.subtract(avg);
     }
 
-    private static PrimitiveMatrix getAverageMatrix(List<Double> avg, int size) {
+    public static PrimitiveMatrix getAverageMatrix(List<Double> avg, int size) {
         Double[][] arr = new Double[size][];
         for (int i = 0; i < size; i++) {
             arr[i] = avg.toArray(new Double[0]);
