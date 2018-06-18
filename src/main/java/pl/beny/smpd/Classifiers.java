@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class Classificators {
+public class Classifiers {
 
     public static String classifyNN(Sample sample, List<Sample> samples) {
         double distanceA = classifyNN(sample, samples, Database.ACER);

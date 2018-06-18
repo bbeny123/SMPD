@@ -14,7 +14,7 @@ public class Main {
         System.out.println((System.nanoTime() - startTime) / 1000000);
 
         startTime = System.nanoTime();
-        System.out.println(Classificators.classifyNN(Database.getSamples(Database.ACER).get(1), Database.getSamples()));
+        System.out.println(Classifiers.classifyNN(Database.getSamples(Database.ACER).get(1), Database.getSamples()));
         System.out.println((System.nanoTime() - startTime) / 1000000);
 
         startTime = System.nanoTime();

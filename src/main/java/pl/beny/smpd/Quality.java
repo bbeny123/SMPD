@@ -53,7 +53,7 @@ public class Quality {
         return samples
                 .stream()
                 .map(sample -> {
-                    String classified = Classificators.classifyNN(sample, training);
+                    String classified = Classifiers.classifyNN(sample, training);
                     return sample.getClassName().equals(classified) || "AMBIGUOUS".equals(classified);
                 })
                 .collect(Collectors.toList());
@@ -63,7 +63,7 @@ public class Quality {
         return samples
                 .stream()
                 .map(sample -> {
-                    String classified = Classificators.classifyNM(sample, training);
+                    String classified = Classifiers.classifyNM(sample, training);
                     return sample.getClassName().equals(classified) || "AMBIGUOUS".equals(classified);
                 })
                 .collect(Collectors.toList());
@@ -73,7 +73,7 @@ public class Quality {
         return samples
                 .stream()
                 .map(sample -> {
-                    String classified = Classificators.classifyKNN(sample, training, k);
+                    String classified = Classifiers.classifyKNN(sample, training, k);
                     return sample.getClassName().equals(classified) || "AMBIGUOUS".equals(classified);
                 })
                 .collect(Collectors.toList());
