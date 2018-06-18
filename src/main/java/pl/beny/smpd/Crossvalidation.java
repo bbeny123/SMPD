@@ -10,19 +10,19 @@ import java.util.stream.IntStream;
 public class Crossvalidation {
 
     public static void checkCrossvalidation(int parts, int k) {
-        List<List<List<Double>>> subsetsA = getSubsets(parts, Database.ACER);
-        List<List<List<Double>>> subsetsB = getSubsets(parts, Database.QUERCUS);
+        List<List<Sample>> subsets = getSubsets(parts);
         List<List<Boolean>> results = List.of(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+
         IntStream.range(0, parts).parallel().forEach(i -> {
-            List<List<Double>> samplesA = getTraining(parts, i, subsetsA);
-            List<List<Double>> samplesB = getTraining(parts, i, subsetsB);
-            results.get(0).addAll(getResultsNN(subsetsA, samplesA, samplesB, i, Database.ACER));
-            results.get(0).addAll(getResultsNN(subsetsB, samplesA, samplesB, i, Database.QUERCUS));
-            results.get(1).addAll(getResultsNM(subsetsA, samplesA, samplesB, i, Database.ACER));
-            results.get(1).addAll(getResultsNM(subsetsB, samplesA, samplesB, i, Database.QUERCUS));
-            results.get(2).addAll(getResultsKNN(subsetsA, samplesA, samplesB, i, Database.ACER, k));
-            results.get(2).addAll(getResultsKNN(subsetsB, samplesA, samplesB, i, Database.QUERCUS, k));
+            List<Sample> training = getTraining(parts, i, subsets);
+            results.get(0).addAll(getResultsNN(subsets, training, i, Database.ACER));
+            results.get(0).addAll(getResultsNN(subsets, training, i, Database.QUERCUS));
+            results.get(1).addAll(getResultsNM(subsets, training, i, Database.ACER));
+            results.get(1).addAll(getResultsNM(subsets, training, i, Database.QUERCUS));
+            results.get(2).addAll(getResultsKNN(subsets, training, i, Database.ACER, k));
+            results.get(2).addAll(getResultsKNN(subsets, training, i, Database.QUERCUS, k));
         });
+
         results.forEach(result -> {
             long correct = result.stream().filter(r -> r).count();
             long incorrect = result.stream().filter(r -> !r).count();
@@ -32,42 +32,46 @@ public class Crossvalidation {
         });
     }
 
-    private static List<Boolean> getResultsNN(List<List<List<Double>>> subset, List<List<Double>> samplesA , List<List<Double>> samplesB, int part, String className) {
+    private static List<Boolean> getResultsNN(List<List<Sample>> subsets, List<Sample> training, int part, String className) {
         List<String> correct = Arrays.asList(className, "AMBIGUOUS");
-        return subset.get(part)
+        return Database.getSamples(subsets.get(part), className)
                 .stream()
-                .map(sample -> correct.contains(Classificators.classifyNN(sample, samplesA, samplesB)))
+                .map(sample -> correct.contains(Classificators.classifyNN(sample, training)))
                 .collect(Collectors.toList());
     }
 
-    private static List<Boolean> getResultsNM(List<List<List<Double>>> subset, List<List<Double>> samplesA , List<List<Double>> samplesB, int part, String className) {
+    private static List<Boolean> getResultsNM(List<List<Sample>> subsets, List<Sample> training, int part, String className) {
         List<String> correct = Arrays.asList(className, "AMBIGUOUS");
-        return subset.get(part)
+        return Database.getSamples(subsets.get(part), className)
                 .stream()
-                .map(sample -> correct.contains(Classificators.classifyNM(sample, samplesA, samplesB)))
+                .map(sample -> correct.contains(Classificators.classifyNM(sample, training)))
                 .collect(Collectors.toList());
     }
 
-    private static List<Boolean> getResultsKNN(List<List<List<Double>>> subset, List<List<Double>> samplesA , List<List<Double>> samplesB, int part, String className, int k) {
+    private static List<Boolean> getResultsKNN(List<List<Sample>> subsets, List<Sample> training, int part, String className, int k) {
         List<String> correct = Arrays.asList(className, "AMBIGUOUS");
-        return subset.get(part)
+        return Database.getSamples(subsets.get(part), className)
                 .stream()
-                .map(sample -> correct.contains(Classificators.classifyKNN(sample, samplesA, samplesB, k)))
+                .map(sample -> correct.contains(Classificators.classifyKNN(sample, training, k)))
                 .collect(Collectors.toList());
     }
 
-    private static List<List<Double>> getTraining(int parts, int part, List<List<List<Double>>> subsets) {
-        return IntStream.range(0, parts).filter(i -> i != part).boxed().flatMap(i -> subsets.get(i).stream()).collect(Collectors.toList());
+    private static List<Sample> getTraining(int parts, int part, List<List<Sample>> subsets) {
+        return IntStream.range(0, parts)
+                .filter(i -> i != part).boxed()
+                .flatMap(i -> subsets.get(i).stream())
+                .collect(Collectors.toList());
     }
 
-    private static List<List<List<Double>>> getSubsets(int parts, String className) {
-        List<List<Double>> samples = Database.getDatabase(className);
+    private static List<List<Sample>> getSubsets(int parts) {
+        List<Sample> samples = Database.getSamples();
         Collections.shuffle(samples);
-        List<List<List<Double>>> subsets = new ArrayList<>();
+        List<List<Sample>> subsets = new ArrayList<>();
         int partitionSize = Math.max(1, samples.size() / parts);
-        for (int i = 0; i < parts; i++) {
-            subsets.add(samples.subList(i * partitionSize, i + 1 == parts ? samples.size() : Math.min((i + 1) * partitionSize, samples.size())));
-        }
+        IntStream.range(0, parts)
+                .forEach(i -> subsets.add(samples.subList(
+                        i * partitionSize,
+                        i + 1 == parts ? samples.size() : Math.min((i + 1) * partitionSize, samples.size()))));
         return subsets;
     }
 

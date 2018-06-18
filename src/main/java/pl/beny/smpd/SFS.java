@@ -31,7 +31,10 @@ public class SFS {
         Result result = new Result();
         IntStream.range(0, k).boxed().forEach(i -> {
             result.newIteration();
-            IntStream.range(0, 64).boxed().filter(j -> !result.indexes.contains(j)).parallel().forEach(index -> result.updateResult(index, computeFisher(result.indexes, index)));
+            IntStream.range(0, 64).boxed()
+                    .filter(j -> !result.indexes.contains(j))
+                    .parallel()
+                    .forEach(index -> result.updateResult(index, computeFisher(result.indexes, index)));
             result.iterationEnd();
         });
         return result.indexes + " = " + result.result;
