@@ -6,11 +6,11 @@ public class Main {
         long startTime;
 
         startTime = System.nanoTime();
-        System.out.println(new SFS().computeSFSP(64));
+        System.out.println(new SFS().computeSFSP(5));
         System.out.println((System.nanoTime() - startTime) / 1000000);
 
         startTime = System.nanoTime();
-        System.out.println(new Fisher().computeFisherP(4));
+        System.out.println(new Fisher().computeFisherP(3));
         System.out.println((System.nanoTime() - startTime) / 1000000);
 
         startTime = System.nanoTime();

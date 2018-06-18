@@ -52,7 +52,8 @@ public class Fisher {
 
     private static double computeDenominator(List<List<Double>> attrA, List<List<Double>> attrB, List<Double> avgA, List<Double> avgB) {
         return attrA.size() > 1 ?
-                Matrix.getCovarianceDeterminant(attrA, avgA) + Matrix.getCovarianceDeterminant(attrB, avgB) :
+                Matrix.getCovariance(attrA, avgA).add(Matrix.getCovariance(attrB, avgB)).getDeterminant().get() :
+//                Matrix.getCovarianceDeterminant(attrA, avgA) + Matrix.getCovarianceDeterminant(attrB, avgB) :
                 Matrix.getStd(attrA.get(0), avgA.get(0)) + (Matrix.getStd(attrB.get(0), avgB.get(0)));
     }
 

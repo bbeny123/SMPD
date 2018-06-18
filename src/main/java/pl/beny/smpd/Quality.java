@@ -1,16 +1,13 @@
 package pl.beny.smpd;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Quality {
 
     public static void checkBootstrap(int i, int n, int k) {
-        List<List<Boolean>> results = List.of(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        List<List<Boolean>> results = Arrays.asList(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
         List<Sample> samples = Database.getSamples();
         IntStream.range(0, i).parallel().forEach(j -> {
@@ -27,7 +24,7 @@ public class Quality {
     }
 
     public static void checkCrossvalidation(int parts, int k) {
-        List<List<Boolean>> results = List.of(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        List<List<Boolean>> results = Arrays.asList(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
         List<List<Sample>> samples = getSubsets(parts);
         IntStream.range(0, parts).parallel().forEach(i -> {
