@@ -47,7 +47,7 @@ public class Database {
         return indexes
                 .stream()
                 .map(i -> getSamples(className).stream()
-                        .map(a -> a.getAttr().get(i))
+                        .map(s -> s.getAttr().get(i))
                         .collect(Collectors.toList()))
                 .collect(Collectors.toList());
     }
