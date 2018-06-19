@@ -9,24 +9,6 @@ import java.util.stream.Stream;
 
 public class Fisher {
 
-    private class Result {
-        private List<Integer> indexes;
-        private double result;
-
-        private void updateResult(List<Integer> indexes, double result) {
-            if (result > this.result) {
-                this.indexes = indexes;
-                this.result = result;
-            }
-        }
-    }
-
-    public String computeFisherP(int k) {
-        Result result = new Result();
-        combinations(k).parallelStream().forEach(indexes -> result.updateResult(indexes, computeFisher(indexes)));
-        return result.indexes + " = " + result.result;
-    }
-
     public static String computeFisher(int k) {
         List<Integer> indexes = new ArrayList<>();
         double result = 0;
@@ -74,6 +56,24 @@ public class Fisher {
         List<Integer> newList = new ArrayList<>(tail);
         newList.add(0, head);
         return newList;
+    }
+
+    public String computeFisherP(int k) {
+        Result result = new Result();
+        combinations(k).parallelStream().forEach(indexes -> result.updateResult(indexes, computeFisher(indexes)));
+        return result.indexes + " = " + result.result;
+    }
+
+    private class Result {
+        private List<Integer> indexes;
+        private double result;
+
+        private void updateResult(List<Integer> indexes, double result) {
+            if (result > this.result) {
+                this.indexes = indexes;
+                this.result = result;
+            }
+        }
     }
 
 }

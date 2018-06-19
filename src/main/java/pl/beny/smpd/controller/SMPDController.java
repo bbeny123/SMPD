@@ -75,9 +75,12 @@ public class SMPDController {
         List<ClassifierDTO> results = new ArrayList<>();
         boolean all = "all".equals(method);
 
-        if (all || "nn".equals(method)) results.add(new ClassifierDTO("NN", test.parallelStream().map(s -> Classifiers.classifyNN(s, training)).collect(Collectors.toList())));
-        if (all || "nm".equals(method)) results.add(new ClassifierDTO("NM", test.parallelStream().map(s -> Classifiers.classifyNM(s, training)).collect(Collectors.toList())));
-        if (all || "knn".equals(method)) results.add(new ClassifierDTO(String.format("KNN (k = %d)", k), test.parallelStream().map(s -> Classifiers.classifyKNN(s, training, k)).collect(Collectors.toList())));
+        if (all || "nn".equals(method))
+            results.add(new ClassifierDTO("NN", test.parallelStream().map(s -> Classifiers.classifyNN(s, training)).collect(Collectors.toList())));
+        if (all || "nm".equals(method))
+            results.add(new ClassifierDTO("NM", test.parallelStream().map(s -> Classifiers.classifyNM(s, training)).collect(Collectors.toList())));
+        if (all || "knn".equals(method))
+            results.add(new ClassifierDTO(String.format("KNN (k = %d)", k), test.parallelStream().map(s -> Classifiers.classifyKNN(s, training, k)).collect(Collectors.toList())));
 
         attributes.addFlashAttribute("training", String.format("%d - %d%%", training.size(), part));
         attributes.addFlashAttribute("test", String.format("%d - %d%%", test.size(), 100 - part));
@@ -95,8 +98,10 @@ public class SMPDController {
         List<BootstrapDTO> results = new ArrayList<>();
         boolean both = "both".equals(method);
 
-        if (both || "csv".equals(method)) results.add(new BootstrapDTO(String.format("Cross-validation (%d subsets)", subsets), Quality.checkCrossvalidation(subsets, k), k));
-        if (both || "bts".equals(method)) results.add(new BootstrapDTO(String.format("Bootstrap (%d iterations, samples size = %d)", iterations, samples), Quality.checkBootstrap(iterations, samples, k), k));
+        if (both || "csv".equals(method))
+            results.add(new BootstrapDTO(String.format("Cross-validation (%d subsets)", subsets), Quality.checkCrossvalidation(subsets, k), k));
+        if (both || "bts".equals(method))
+            results.add(new BootstrapDTO(String.format("Bootstrap (%d iterations, samples size = %d)", iterations, samples), Quality.checkBootstrap(iterations, samples, k), k));
 
         attributes.addFlashAttribute("results", results);
         return new RedirectView("/bootstrap");
