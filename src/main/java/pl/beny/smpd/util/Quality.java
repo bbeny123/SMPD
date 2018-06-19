@@ -38,7 +38,7 @@ public class Quality {
     }
 
     private static List<List<Sample>> getSubsets(int parts) {
-        List<Sample> samples = Database.getSamples();
+        List<Sample> samples = new ArrayList<>(Database.getSamples());
         Collections.shuffle(samples);
         List<List<Sample>> subsets = new ArrayList<>();
         int partitionSize = Math.max(1, samples.size() / parts);
