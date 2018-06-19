@@ -1,4 +1,4 @@
-package pl.beny.smpd;
+package pl.beny.smpd.util;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -52,30 +52,21 @@ public class Quality {
     private static List<Boolean> getResultsNN(List<Sample> samples, List<Sample> training) {
         return samples
                 .stream()
-                .map(sample -> {
-                    String classified = Classifiers.classifyNN(sample, training);
-                    return sample.getClassName().equals(classified) || "AMBIGUOUS".equals(classified);
-                })
+                .map(sample -> Classifiers.classifyNN(sample, training))
                 .collect(Collectors.toList());
     }
 
     private static List<Boolean> getResultsNM(List<Sample> samples, List<Sample> training) {
         return samples
                 .stream()
-                .map(sample -> {
-                    String classified = Classifiers.classifyNM(sample, training);
-                    return sample.getClassName().equals(classified) || "AMBIGUOUS".equals(classified);
-                })
+                .map(sample -> Classifiers.classifyNM(sample, training))
                 .collect(Collectors.toList());
     }
 
     private static List<Boolean> getResultsKNN(List<Sample> samples, List<Sample> training, int k) {
         return samples
                 .stream()
-                .map(sample -> {
-                    String classified = Classifiers.classifyKNN(sample, training, k);
-                    return sample.getClassName().equals(classified) || "AMBIGUOUS".equals(classified);
-                })
+                .map(sample -> Classifiers.classifyKNN(sample, training, k))
                 .collect(Collectors.toList());
     }
 

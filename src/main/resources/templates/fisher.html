@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--/*/ <th:block th:include="fragments/head :: head"></th:block> /*/-->
+</head>
+<body>
+<div class="container">
+    <!--/*/ <th:block th:include="fragments/menu :: menu"></th:block> /*/-->
+    <script>document.getElementById('fisher').classList.add('active');</script>
+
+    <form action="/fisher" method="post" class="mt-3 mb-3">
+        <div class="form-inline">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">n</span>
+                </div>
+                <input name="n" type="number" class="form-control" placeholder="n (1 - 64)" min="1" max="64" required/>
+            </div>
+            <div class="btn-toolbar pl-2">
+                <div class="btn-group">
+                    <button class="btn btn-primary" type="submit" th:text="COMPUTE"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div th:if="${results}">
+        <h4 class="font-weight-bold mb-1">FISHER</h4>
+        <div th:if="${results.fExists}">
+            <span class="font-weight-bold">Result: </span>
+            <span th:text="'F' + ${results.fisher}"></span><br/>
+            <span class="font-weight-bold">Execution time: </span>
+            <span class="font-italic" th:text="${results.fTime} + ' ms'"></span><br/><br/>
+        </div>
+        <div th:if="${!results.fExists}">
+            <span class="font-italic font-weight-bold" th:text="${results.fisher}"></span><br/><br/>
+        </div>
+
+        <h4 class="font-weight-bold mb-1">SFS</h4>
+        <span class="font-weight-bold">Result: </span>
+        <span th:text="'S' + ${results.sfs}"></span><br/>
+        <span class="font-weight-bold">Execution time: </span>
+        <span class="font-italic" th:text="${results.sTime} + ' ms'"></span><br/><br/>
+
+        <h5 th:if="${results.fExists}" class="font-weight-bold" th:text="${results.times}"></h5>
+    </div>
+</div>
+</body>
+</html>

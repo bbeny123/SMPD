@@ -1,4 +1,4 @@
-package pl.beny.smpd;
+package pl.beny.smpd.util;
 
 import org.ojalgo.matrix.PrimitiveMatrix;
 

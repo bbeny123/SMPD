@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--/*/ <th:block th:include="fragments/head :: head"></th:block> /*/-->
+</head>
+<body>
+<div class="container">
+    <!--/*/ <th:block th:include="fragments/menu :: menu"></th:block> /*/-->
+    <script>document.getElementById('classifiers').classList.add('active');</script>
+
+    <form action="/classifiers/train" method="post" class="mt-3">
+        <div class="form-inline">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Training part</span>
+                </div>
+                <input name="part" type="number" class="form-control" placeholder="training part in % (1 - 99)" min="1" max="99" required/>
+            </div>
+            <div class="btn-toolbar pl-2">
+                <div class="btn-group">
+                    <button class="btn btn-primary" type="submit" th:text="TRAIN"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="form-inline">
+        <form action="/classifiers/nn" method="post" class="mt-3">
+            <div class="btn-toolbar mr-2">
+                <div class="btn-group">
+                    <button class="btn btn-primary" type="submit" th:text="NN"></button>
+                </div>
+            </div>
+        </form>
+        <form action="/classifiers/nm" method="post" class="mt-3">
+            <div class="btn-toolbar mr-2">
+                <div class="btn-group">
+                    <button class="btn btn-primary" type="submit" th:text="NM"></button>
+                </div>
+            </div>
+        </form>
+        <form action="/classifiers/knn" method="post" class="mt-3">
+            <div class="form-inline">
+                <div class="input-group w-50">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">k</span>
+                    </div>
+                    <input name="k" type="number" class="form-control" placeholder="k" min="1" required/>
+                </div>
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit" th:text="KNN"></button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <form action="/classifiers/all" method="post" class="mt-3">
+        <div class="form-inline">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">k</span>
+                </div>
+                <input name="k" type="number" class="form-control" placeholder="k" min="1" required/>
+            </div>
+            <div class="btn-toolbar">
+                <div class="btn-group pl-2">
+                    <button class="btn btn-primary" type="submit" th:text="ALL"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!--/*@thymesVar id="results" type="pl.beny.smpd.dto.ClassifierDTO"*/-->
+    <!--/*@thymesVar id="r" type="pl.beny.smpd.dto.ClassifierDTO"*/-->
+    <!--/*@thymesVar id="training" type="String"*/-->
+    <!--/*@thymesVar id="test" type="java.lang.String"*/-->
+    <div th:if="${results}">
+        <h4 class="font-weight-bold mt-3">Results</h4>
+        <span class="font-weight-bold mb-1">Training samples: </span>
+        <span class="mb-1" th:text="${training}"></span><br/>
+        <span class="font-weight-bold mb-1">Test samples: </span>
+        <span class="mb-1" th:text="${test}"></span><br/>
+        <div th:each="r : ${results}" class="mt-2">
+            <h5 class="font-weight-bold mb-1" th:text="${r.name}"></h5>
+            <span class="text-success font-weight-bold mb-1">Correct: </span>
+            <span class="mb-1" th:text="${r.correct}"></span><br/>
+            <span class="text-danger font-weight-bold mb-1">Incorrect: </span>
+            <span class="mb-1" th:text="${r.incorrect}"></span><br/>
+        </div>
+    </div>
+</div>
+</body>
+</html>

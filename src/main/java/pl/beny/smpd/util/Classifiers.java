@@ -1,4 +1,4 @@
-package pl.beny.smpd;
+package pl.beny.smpd.util;
 
 import org.ojalgo.matrix.PrimitiveMatrix;
 
@@ -10,10 +10,10 @@ import java.util.stream.Stream;
 
 public class Classifiers {
 
-    public static String classifyNN(Sample sample, List<Sample> samples) {
+    public static boolean classifyNN(Sample sample, List<Sample> samples) {
         double distanceA = classifyNN(sample, samples, Database.ACER);
         double distanceB = classifyNN(sample, samples, Database.QUERCUS);
-        return distanceA == distanceB ? "AMBIGUOUS" : distanceA > distanceB ? Database.QUERCUS : Database.ACER;
+        return distanceA == distanceB || sample.getClassName().equals(distanceA > distanceB ? Database.QUERCUS : Database.ACER);
     }
 
     private static double classifyNN(Sample sample, List<Sample> samples, String className) {
@@ -26,7 +26,7 @@ public class Classifiers {
                 .orElse(-1);
     }
 
-    public static String classifyKNN(Sample sample, List<Sample> samples, int k) {
+    public static boolean classifyKNN(Sample sample, List<Sample> samples, int k) {
         List<Double> distanceA = classifyKNN(sample, samples, k, Database.ACER);
         List<Double> distanceB = classifyKNN(sample, samples, k, Database.QUERCUS);
 
@@ -39,7 +39,7 @@ public class Classifiers {
 
         long numberA = distanceA.stream().filter(i -> i <= maxDistance).count();
         long numberB = distanceB.stream().filter(i -> i <= maxDistance).count();
-        return numberA == numberB ? "AMBIGUOUS" : numberB > numberA ? Database.QUERCUS : Database.ACER;
+        return distanceA == distanceB || sample.getClassName().equals(numberB > numberA ? Database.QUERCUS : Database.ACER);
     }
 
     private static List<Double> classifyKNN(Sample sample, List<Sample> samples, int k, String className) {
@@ -62,10 +62,10 @@ public class Classifiers {
                 .collect(Collectors.toList());
     }
 
-    public static String classifyNM(Sample sample, List<Sample> samples) {
+    public static boolean classifyNM(Sample sample, List<Sample> samples) {
         double distanceA = classifyNM(sample, samples, Database.ACER);
         double distanceB = classifyNM(sample, samples, Database.QUERCUS);
-        return distanceA == distanceB ? "AMBIGUOUS" : distanceA > distanceB ? Database.QUERCUS : Database.ACER;
+        return distanceA == distanceB || sample.getClassName().equals(distanceA > distanceB ? Database.QUERCUS : Database.ACER);
     }
 
     private static double classifyNM(Sample sample, List<Sample> samples, String className) {

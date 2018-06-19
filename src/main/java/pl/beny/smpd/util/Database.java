@@ -1,4 +1,4 @@
-package pl.beny.smpd;
+package pl.beny.smpd.util;
 
 import java.io.File;
 import java.util.*;
@@ -35,15 +35,15 @@ public class Database {
         quercusSamples.addAll(getSamples(samples, QUERCUS));
     }
 
-    static List<Sample> getSamples() {
+    public static List<Sample> getSamples() {
         return samples;
     }
 
-    static List<Sample> getSamples(List<Sample> samples, String className) {
+    public static List<Sample> getSamples(List<Sample> samples, String className) {
         return samples.stream().filter(s -> className.equals(s.getClassName())).collect(Collectors.toList());
     }
 
-    static List<List<Double>> getByIndexes(String className, List<Integer> indexes) {
+    public static List<List<Double>> getByIndexes(String className, List<Integer> indexes) {
         return indexes
                 .stream()
                 .map(i -> getSamples(className).stream()
@@ -52,11 +52,11 @@ public class Database {
                 .collect(Collectors.toList());
     }
 
-    static List<Sample> getSamples(String className) {
+    public static List<Sample> getSamples(String className) {
         return className.equals(ACER) ? acerSamples : quercusSamples;
     }
 
-    static List<List<Double>> getByIndexes(List<Sample> samples, List<Integer> indexes) {
+    public static List<List<Double>> getByIndexes(List<Sample> samples, List<Integer> indexes) {
         return indexes
                 .stream()
                 .map(i -> samples.stream()
