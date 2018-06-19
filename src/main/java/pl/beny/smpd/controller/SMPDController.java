@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
+import pl.beny.smpd.dto.BootstrapDTO;
 import pl.beny.smpd.dto.ClassifierDTO;
 import pl.beny.smpd.dto.FisherDTO;
 import pl.beny.smpd.util.*;
@@ -82,6 +83,23 @@ public class SMPDController {
         attributes.addFlashAttribute("test", String.format("%d - %d%%", test.size(), 100 - part));
         attributes.addFlashAttribute("results", results);
         return new RedirectView("/classifiers");
+    }
+
+    @GetMapping("/bootstrap")
+    public String bootstrap() {
+        return "bootstrap";
+    }
+
+    @PostMapping("/bootstrap/{method}")
+    public RedirectView quality(@PathVariable("method") String method, Integer iterations, Integer samples, Integer subsets, Integer k, RedirectAttributes attributes) {
+        List<BootstrapDTO> results = new ArrayList<>();
+        boolean both = "both".equals(method);
+
+        if (both || "csv".equals(method)) results.add(new BootstrapDTO(String.format("Cross-validation (%d subsets)", subsets), Quality.checkCrossvalidation(subsets, k), k));
+        if (both || "bts".equals(method)) results.add(new BootstrapDTO(String.format("Bootstrap (%d iterations, samples size = %d)", iterations, samples), Quality.checkBootstrap(iterations, samples, k), k));
+
+        attributes.addFlashAttribute("results", results);
+        return new RedirectView("/bootstrap");
     }
 
     private long execTime(long startTime) {

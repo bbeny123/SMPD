@@ -1,7 +1,5 @@
 package pl.beny.smpd;
 
-import pl.beny.smpd.util.Quality;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -19,9 +17,9 @@ public class Main {
 //        System.out.println(Classifiers.classifyNN(Database.getSamples(Database.ACER).get(1), Database.getSamples()));
 //        System.out.println((System.nanoTime() - startTime) / 1000000);
 //
-        startTime = System.nanoTime();
-        Quality.checkCrossvalidation(6, 3);
-        System.out.println((System.nanoTime() - startTime) / 1000000);
+//        startTime = System.nanoTime();
+//        Quality.checkCrossvalidation(6, 3);
+//        System.out.println((System.nanoTime() - startTime) / 1000000);
 //
 //        startTime = System.nanoTime();
 //        Quality.checkBootstrap(30, 200, 6);

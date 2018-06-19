@@ -6,7 +6,7 @@ import java.util.stream.IntStream;
 
 public class Quality {
 
-    public static void checkBootstrap(int i, int n, int k) {
+    public static List<List<Boolean>> checkBootstrap(int i, int n, int k) {
         List<List<Boolean>> results = Arrays.asList(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
         List<Sample> samples = Database.getSamples();
@@ -20,10 +20,10 @@ public class Quality {
             results.get(2).addAll(getResultsKNN(samples, training, k));
         });
 
-        printResult(results);
+        return results;
     }
 
-    public static void checkCrossvalidation(int parts, int k) {
+    public static List<List<Boolean>> checkCrossvalidation(int parts, int k) {
         List<List<Boolean>> results = Arrays.asList(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
         List<List<Sample>> samples = getSubsets(parts);
@@ -34,7 +34,7 @@ public class Quality {
             results.get(2).addAll(getResultsKNN(samples.get(i), training, k));
         });
 
-        printResult(results);
+        return results;
     }
 
     private static List<List<Sample>> getSubsets(int parts) {
@@ -75,15 +75,5 @@ public class Quality {
                 .filter(i -> i != part).boxed()
                 .flatMap(i -> subsets.get(i).stream())
                 .collect(Collectors.toList());
-    }
-
-    private static void printResult(List<List<Boolean>> results) {
-        results.forEach(result -> {
-            long correct = result.stream().filter(r -> r).count();
-            long incorrect = result.stream().filter(r -> !r).count();
-            long size = result.size();
-            String msg = String.format("TESTY: %d\nPOPRAWNIE ZAKLASYFIKOWANYCH: %d - %.2f%%\nNIEPOPRAWNIE ZAKLASYFIKOWANYCH: %d - %.2f%%\n", size, correct, (double) correct / size * 100, incorrect, (double) incorrect / size * 100);
-            System.out.println(msg);
-        });
     }
 }
