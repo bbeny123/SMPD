@@ -43,7 +43,7 @@ public class SFS {
     }
 
     private class Result {
-        private List<Integer> indexes = new ArrayList<>();
+        private final List<Integer> indexes = new ArrayList<>();
         private int index;
         private double result;
 

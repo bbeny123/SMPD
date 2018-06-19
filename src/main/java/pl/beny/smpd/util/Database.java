@@ -54,7 +54,7 @@ public class Database {
                 .collect(Collectors.toList());
     }
 
-    public static List<Sample> getSamples(String className) {
+    private static List<Sample> getSamples(String className) {
         return className.equals(ACER) ? acerSamples : quercusSamples;
     }
 

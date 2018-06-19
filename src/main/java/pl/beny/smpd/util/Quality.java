@@ -10,7 +10,7 @@ public class Quality {
         List<List<Boolean>> results = Arrays.asList(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
         List<Sample> samples = Database.getSamples();
-        IntStream.range(0, i).parallel().forEach(j -> {
+        IntStream.range(0, i).forEach(j -> {
             List<Sample> training = IntStream.range(0, n).boxed()
                     .map(l -> samples.get(new Random().nextInt(samples.size())))
                     .collect(Collectors.toList());
@@ -27,7 +27,7 @@ public class Quality {
         List<List<Boolean>> results = Arrays.asList(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
         List<List<Sample>> samples = getSubsets(parts);
-        IntStream.range(0, parts).parallel().forEach(i -> {
+        IntStream.range(0, parts).forEach(i -> {
             List<Sample> training = getTraining(parts, i, samples);
             results.get(0).addAll(getResultsNN(samples.get(i), training));
             results.get(1).addAll(getResultsNM(samples.get(i), training));
@@ -44,7 +44,7 @@ public class Quality {
         int partitionSize = Math.max(1, samples.size() / parts);
         IntStream.range(0, parts)
                 .forEach(i -> subsets.add(samples.subList(
-                        i * partitionSize,
+                        Math.min(i * partitionSize, samples.size()),
                         i + 1 == parts ? samples.size() : Math.min((i + 1) * partitionSize, samples.size()))));
         return subsets;
     }

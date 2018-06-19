@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Matrix {
+class Matrix {
 
     public static double getLength(List<Double> matA, List<Double> matB) {
         return Math.sqrt(IntStream.range(0, matA.size()).mapToDouble(i -> Math.pow(matA.get(i) - matB.get(i), 2)).sum());
@@ -29,12 +29,12 @@ public class Matrix {
         return getCovariance(PrimitiveMatrix.FACTORY.rows(attr.stream().map(l -> l.toArray(new Double[0])).toArray(Double[][]::new)), getAverageMatrix(avg, size), size);
     }
 
-    public static PrimitiveMatrix getCovariance(PrimitiveMatrix values, PrimitiveMatrix avg, int size) {
+    private static PrimitiveMatrix getCovariance(PrimitiveMatrix values, PrimitiveMatrix avg, int size) {
         PrimitiveMatrix differential = getDifferential(values, avg);
         return differential.multiply(differential.transpose()).divide(size);
     }
 
-    public static PrimitiveMatrix getDifferential(PrimitiveMatrix values, PrimitiveMatrix avg) {
+    private static PrimitiveMatrix getDifferential(PrimitiveMatrix values, PrimitiveMatrix avg) {
         return values.subtract(avg);
     }
 
